@@ -5,9 +5,10 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "parcel index.html"
+    "dev": "parcel index.html",
+    "build": ""
   },
-  "author": "",
+  "author": "imgss",
   "license": "MIT",
   "devDependencies": {
     "stylus": "^0.54.7"
