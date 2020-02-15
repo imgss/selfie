@@ -1,23 +1,21 @@
-import {isInRect, Rect} from './utils'
+import {Rect} from './utils'
 const $ = document.querySelector.bind(document)
 const W = window.innerWidth
 const H = window.innerHeight
 const rectWidth = 0.25 * W
 const rectPositions = [[30, 20], [10 + rectWidth * 2, 20], [20 + rectWidth, 80]]
-let capPosition = rectPositions[0] // 在哪个相框显示视频
-
 const rects = rectPositions.map(posi => new Rect(posi, rectWidth))
+
 window.setup = function() {
   createCanvas(W * 0.8, H);
   window.capture = createCapture(VIDEO);
   capture.hide();
-  $('.painter').appendChild($('canvas'))
   background(240);
   strokeWeight(10); 
   stroke(255, 204, 0);
-  rectPositions.forEach(posi => {
-    rect(posi[0], posi[1], rectWidth, rectWidth);
-  })
+
+  rects[0].isCaptured = true
+  $('.painter').appendChild($('canvas'))
   initEvent()
 }
 
@@ -31,7 +29,7 @@ window.doubleClicked = function(event) {
   console.log(event);
   let point = [event.clientX, event.clientY]
   for (let rect of rects) {
-    if (isInRect(point, rect.posi, rectWidth)) {
+    if (rect.isInRect(point)) {
       rect.isCaptured = true
     } else {
       rect.isCaptured = false
@@ -41,9 +39,24 @@ window.doubleClicked = function(event) {
 
 function initEvent() {
   $('.camera-icon').addEventListener('click', function() {
-    setTimeout(function() {
-      saveCanvas('p1', 'jpg')
-    }, 3000)
+    let capRect = rects.find((rect) => rect.isCaptured)
+    let count = 0
+    let target = 3
+    let countDown = function() {
+      console.log(count)
+      setTimeout(function() {
+        if (count === target) {
+          $('#camera-mp3').play()
+          capRect.save()
+        } else {
+          $('#mp3').currentTime = 0
+          $('#mp3').play()
+          count++
+          countDown()
+        }
+      }, 1000)
+    }
+    countDown()
   })
 }
 

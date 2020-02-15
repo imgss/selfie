@@ -9,6 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
 </head>
 <body>
+  <audio src="media/countDown.mp3" type="audio/mpeg" id="mp3"></audio>
+  <audio src="media/camera.mp3" type="audio/mpeg" id="camera-mp3"></audio>
   <div id="app">
     <div class="painter"></div>
     <div class="line">
@@ -16,7 +18,12 @@
         <img src="./img/camerapx.svg" alt="">
       </div>
     </div>
-    <div class="panel"></div>
+    <div class="panel">
+      <ul>
+        <li>点击照相机图标拍摄</li>
+        <li>双击相框可以开始拍摄下一张</li>
+      </ul>
+    </div>
   </div>
   <script src="sketch.js"></script>
 </body>
