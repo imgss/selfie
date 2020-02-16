@@ -18,7 +18,8 @@ export class Rect {
 
     if (this.isCaptured && capture.loadedmetadata) {
       // mirror https://github.com/processing/p5.js/issues/525
-      let c = capture.get(0, 0, capture.height, capture.height);
+      const capWidth = Math.min(capture.width, capture.height)
+      let c = capture.get(0, 0, capWidth, capWidth);
       image(c, 0, this.y, this.width, this.width);
     } else if (this.image) {
       image(this.image, 0, this.y, this.width, this.width)
@@ -27,8 +28,9 @@ export class Rect {
   }
 
   save() {
+    const capWidth = Math.min(capture.width, capture.height)
     this.isCaptured = false
-    this.image = capture.get(0, 0, capture.height, capture.height);
+    this.image = capture.get(0, 0, capWidth, capWidth);
   }
 
   isInRect(point) {

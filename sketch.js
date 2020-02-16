@@ -1,15 +1,12 @@
 import {Rect} from './utils'
 import Hammer from 'hammerjs'
 const $ = document.querySelector.bind(document)
-const W = window.innerWidth
-const H = window.innerHeight
-const rectWidth = 0.25 * W
-const rectPositions = [[30, 20], [10 + rectWidth * 2, 20], [20 + rectWidth, 80]]
-const rects = rectPositions.map(posi => new Rect(posi, rectWidth))
-console.log(rects)
 
+const painter = $('.painter')
+const rectWidth = 0.33 * painter.clientWidth
+const rectPositions = [[10, 20], [rectWidth * 2 - 20, 20], [rectWidth - 10, 80]]
+const rects = rectPositions.map(posi => new Rect(posi, rectWidth))
 window.setup = function() {
-  const painter = $('.painter')
   createCanvas(painter.clientWidth, painter.clientHeight);
   window.capture = createCapture(VIDEO);
   capture.hide();
@@ -29,13 +26,15 @@ window.draw = function() {
 }
 
 function initEvent() {
-  var hammer = new Hammer(document.body);
+  const hammer = new Hammer(document.body);
+  let lock = false // 拍照锁定
+
   hammer.on('doubletap', function(e) {
-    console.log(e);
+    if (lock) return
     let point = e.center
+    if (rects.every(rect => !rect.isInRect(point))) return
     for (let rect of rects) {
       if (rect.isInRect(point)) {
-        console.log(rect)
         rect.isCaptured = true
       } else {
         rect.isCaptured = false
@@ -52,7 +51,7 @@ function initEvent() {
     }
   });
 
-  let lock = false
+
   $('.camera-icon').addEventListener('click', function() {
     if (lock) return
     let capRect = rects.find((rect) => rect.isCaptured)
