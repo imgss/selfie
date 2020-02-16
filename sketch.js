@@ -53,16 +53,19 @@ function initEvent() {
 
 
   $('.camera-icon').addEventListener('click', function() {
-    if (lock) return
     let capRect = rects.find((rect) => rect.isCaptured)
+    if (lock || !capRect) return
+
     let count = 0
     let target = 3
+    $('.camera-icon').classList.add('count-down')
     let countDown = function() {
       setTimeout(function() {
         if (count === target) {
           $('#camera-mp3').play()
           lock = false
           capRect.save()
+          $('.camera-icon').classList.remove('count-down')
         } else {
           $('#mp3').currentTime = 0
           $('#mp3').play()
