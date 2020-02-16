@@ -36,6 +36,6 @@ export class Rect {
     const right = this.x + this.width
     const top = this.y
     const bottom = this.y + this.width
-    return point[0] < right && point[0] > left && point[1] < bottom && point[1] > top
+    return point.x < right && point.x > left && point.y < bottom && point.y > top
   }
 }

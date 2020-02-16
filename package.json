@@ -12,5 +12,8 @@
   "license": "MIT",
   "devDependencies": {
     "stylus": "^0.54.7"
+  },
+  "dependencies": {
+    "hammerjs": "^2.0.8"
   }
 }
