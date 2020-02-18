@@ -9,12 +9,29 @@ html,body
   display: flex
 .painter
   width: 80%
+.icon
+  background #fff
+  box-shadow: rgba(0,0,0,.15) 0 0 4px
+  transform: translateX(0)
+  border-radius 50%
+  cursor pointer
+  width 60px
+  height 60px
+  img 
+    width: 40px
+    height 40px
+    margin 10px
+    display block
+.save-icon
+  overflow: hidden
+  margin 0 auto
 .line
   width: 1px
   background: #9b9b9b
   display flex
   align-items: center
   justify-content: center
+
   .camera-icon
     background #fff
     box-shadow: rgba(0,0,0,.15) 0 0 4px
@@ -43,12 +60,6 @@ html,body
         font-size 30px
         animation: countdown 1 3s linear
         animation-delay: 1s
-    img 
-      width: 40px
-      height 40px
-      margin 10px
-      display block
-
 @media screen and (max-width 500px)
   #app
     flex-direction: column

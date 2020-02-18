@@ -51,6 +51,11 @@ function initEvent() {
     }
   });
 
+  $('.save-icon').addEventListener('click', function() {
+    if (rects.some(r => r.image)) {
+      saveCanvas('salfie', 'jpg')
+    }
+  })
 
   $('.camera-icon').addEventListener('click', function() {
     let capRect = rects.find((rect) => rect.isCaptured)

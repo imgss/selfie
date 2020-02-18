@@ -6,11 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel index.html",
-    "build": ""
+    "build": "parcel build index.html --public-url /demo/selfie -d dist/selfie",
+    "deploy": "scp -r dist/selfie/ root@xxx.xxx:/root/blog/demo"
   },
   "author": "imgss",
   "license": "MIT",
   "devDependencies": {
+    "cssnano": "^4.1.10",
     "stylus": "^0.54.7"
   },
   "dependencies": {
