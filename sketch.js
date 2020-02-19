@@ -10,7 +10,6 @@ window.setup = function() {
   createCanvas(painter.clientWidth, painter.clientHeight);
   window.capture = createCapture(VIDEO);
   capture.hide();
-  background(240);
   strokeWeight(10); 
   stroke(255, 204, 0);
 
@@ -20,6 +19,7 @@ window.setup = function() {
 }
 
 window.draw = function() {
+  background(240);
   rects.forEach(rect => {
     rect.draw()
   })
@@ -41,12 +41,35 @@ function initEvent() {
       }
     }
   });
+
   // 单击相框也可以拍照
   hammer.on('tap', function(e) {
     let point = e.center
     for (let rect of rects) {
       if (rect.isInRect(point) && rect.isCaptured) {
         $('.camera-icon').click()
+      }
+    }
+  });
+
+  // 支持移动相框
+  hammer.on('panstart', function(e) {
+    let point = e.center
+    for (let l = rects.length - 1; l >= 0; l--) {
+      let rect = rects[l]
+      if (rect.isInRect(point)) {
+        console.log(rect)
+        hammer.on('panmove', function(e) {
+          // console.log(e)
+          let center = e.center
+          rect.x += center.x - point.x 
+          rect.y += center.y - point.y
+          point = center
+        })
+        hammer.on('panend', function() {
+          hammer.off('panmove')
+        })
+        break
       }
     }
   });
