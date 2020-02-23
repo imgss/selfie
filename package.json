@@ -15,6 +15,19 @@
     "cssnano": "^4.1.10",
     "stylus": "^0.54.7"
   },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "parserOptions": {
+      "sourceType": "module"
+    },
+    "plugins": [],
+    "rules": {
+      "semi": "error"
+    }
+  },
   "dependencies": {
     "hammerjs": "^2.0.8"
   }

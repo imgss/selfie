@@ -37,6 +37,9 @@ window.addEventListener('orientationchange', function(e) {
   const rectPositions = [[10, 20], [rectWidth * 2 - 20, 20], [rectWidth - 10, 80]];
   rectPositions.forEach((posi,i) => rects[i].reset(posi, rectWidth));
   resizeCanvas(painter.clientWidth, painter.clientHeight);
+  
+  window.capture = createCapture(VIDEO);
+  capture.hide();
 });
 
 function initEvent() {
