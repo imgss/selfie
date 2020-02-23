@@ -1,11 +1,11 @@
-import {Rect} from './utils'
-import Hammer from 'hammerjs'
-const $ = document.querySelector.bind(document)
+import {Rect} from './utils';
+import Hammer from 'hammerjs';
+const $ = document.querySelector.bind(document);
 
-const painter = $('.painter')
-const rectWidth = 0.33 * painter.clientWidth
-const rectPositions = [[10, 20], [rectWidth * 2 - 20, 20], [rectWidth - 10, 80]]
-const rects = rectPositions.map(posi => new Rect(posi, rectWidth))
+const painter = $('.painter');
+let rectWidth = 0.33 * painter.clientWidth;
+const rectPositions = [[10, 20], [rectWidth * 2 - 20, 20], [rectWidth - 10, 80]];
+const rects = rectPositions.map(posi => new Rect(posi, rectWidth));
 window.setup = function() {
   createCanvas(painter.clientWidth, painter.clientHeight);
   window.capture = createCapture(VIDEO);
@@ -13,97 +13,111 @@ window.setup = function() {
   strokeWeight(10); 
   stroke(255, 204, 0);
 
-  rects[0].isCaptured = true
-  $('.painter').appendChild($('canvas'))
-  initEvent()
-}
+  rects[0].isCaptured = true;
+  $('.painter').appendChild($('canvas'));
+  initEvent();
+};
 
 window.draw = function() {
   background(240);
   rects.forEach(rect => {
-    rect.draw()
-  })
-}
+    rect.draw();
+  });
+};
+
+window.windowResized = function() {
+  rectWidth = 0.33 * painter.clientWidth;
+  const rectPositions = [[10, 20], [rectWidth * 2 - 20, 20], [rectWidth - 10, 80]];
+  rectPositions.forEach((posi,i) => rects[i].reset(posi, rectWidth));
+  resizeCanvas(painter.clientWidth, painter.clientHeight);
+};
+
+window.addEventListener('orientationchange', function(e) {
+  rectWidth = 0.33 * painter.clientWidth;
+  const rectPositions = [[10, 20], [rectWidth * 2 - 20, 20], [rectWidth - 10, 80]];
+  rectPositions.forEach((posi,i) => rects[i].reset(posi, rectWidth));
+  resizeCanvas(painter.clientWidth, painter.clientHeight);
+});
 
 function initEvent() {
   const hammer = new Hammer(document.body);
-  let lock = false // 拍照锁定
+  let lock = false; // 拍照锁定
 
   hammer.on('doubletap', function(e) {
-    if (lock) return
-    let point = e.center
-    if (rects.every(rect => !rect.isInRect(point))) return
+    if (lock) return;
+    let point = e.center;
+    if (rects.every(rect => !rect.isInRect(point))) return;
     for (let rect of rects) {
       if (rect.isInRect(point)) {
-        rect.isCaptured = true
+        rect.isCaptured = true;
       } else {
-        rect.isCaptured = false
+        rect.isCaptured = false;
       }
     }
   });
 
   // 单击相框也可以拍照
   hammer.on('tap', function(e) {
-    let point = e.center
+    let point = e.center;
     for (let rect of rects) {
       if (rect.isInRect(point) && rect.isCaptured) {
-        $('.camera-icon').click()
+        $('.camera-icon').click();
       }
     }
   });
 
   // 支持移动相框
   hammer.on('panstart', function(e) {
-    let point = e.center
+    let point = e.center;
     for (let l = rects.length - 1; l >= 0; l--) {
-      let rect = rects[l]
+      let rect = rects[l];
       if (rect.isInRect(point)) {
-        console.log(rect)
+
         hammer.on('panmove', function(e) {
-          // console.log(e)
-          let center = e.center
-          rect.x += center.x - point.x 
-          rect.y += center.y - point.y
-          point = center
-        })
+          let center = e.center;
+          rect.x += center.x - point.x; 
+          rect.y += center.y - point.y;
+          point = center;
+        });
         hammer.on('panend', function() {
-          hammer.off('panmove')
-        })
-        break
+          hammer.off('panmove');
+        });
+        break;
       }
     }
   });
 
   $('.save-icon').addEventListener('click', function() {
     if (rects.some(r => r.image)) {
-      saveCanvas('salfie', 'jpg')
+      saveCanvas('salfie', 'jpg');
     }
-  })
+  });
 
   $('.camera-icon').addEventListener('click', function() {
-    let capRect = rects.find((rect) => rect.isCaptured)
-    if (lock || !capRect) return
+    let capRect = rects.find((rect) => rect.isCaptured);
+    if (lock || !capRect) return;
 
-    let count = 0
-    let target = 3
-    $('.camera-icon').classList.add('count-down')
+    let count = 0;
+    let target = 2;
+    $('.camera-icon').classList.add('count-down');
     let countDown = function() {
+      $('#mp3').play();
       setTimeout(function() {
         if (count === target) {
-          $('#camera-mp3').play()
-          lock = false
-          capRect.save()
-          $('.camera-icon').classList.remove('count-down')
+          $('#camera-mp3').play();
+          lock = false;
+          capRect.save();
+          $('.camera-icon').classList.remove('count-down');
         } else {
-          $('#mp3').currentTime = 0
-          $('#mp3').play()
-          count++
-          countDown()
+          $('#mp3').currentTime = 0;
+          $('#mp3').play();
+          count++;
+          countDown();
         }
-      }, 1000)
-    }
-    lock = true
-    countDown()
-  })
+      }, 1000);
+    };
+    lock = true;
+    countDown();
+  });
 }
 
